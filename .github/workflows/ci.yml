@@ -27,4 +27,5 @@ jobs:
       - name: Build, test y análisis con Sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: ./l2g8
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Josebaena03_mgcss-track-L2_G8
