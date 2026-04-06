@@ -19,7 +19,7 @@ public class AsignarTecnicoTest {
 		Tecnico tecnico1,tecnico2;
 
 		tecnico1 = Tecnico.builder().id(1L).nombre("Tecnico 1").estado(EstadoTecnico.ACTIVO).build();
-		tecnico2 = Tecnico.builder().id(2L).nombre("Tecnico 2").estado(EstadoTecnico.INACTIVO).build();
+		tecnico2 = Tecnico.builder().id(2L).nombre("Tecnico 2").estado(EstadoTecnico.ACTIVO).build();
 
 		Solicitud solicitud1 = new Solicitud(1L, EstadoSolicitud.ABIERTA, new Date());
 		solicitud1.asignarTecnico(tecnico1);
