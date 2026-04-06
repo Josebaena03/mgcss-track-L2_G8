@@ -14,7 +14,7 @@ public class SolicitudTest {
 
 	@Test
 	public void cerrarSolicitudAbierta() {
-		Solicitud solicitud = new Solicitud(1L, EstadoSolicitud.ABIERTA, new Date());
+		Solicitud solicitud = new Solicitud(1L, EstadoSolicitud.PROCESANDO, new Date());
 
 		solicitud.cerrarSolicitud();
 
