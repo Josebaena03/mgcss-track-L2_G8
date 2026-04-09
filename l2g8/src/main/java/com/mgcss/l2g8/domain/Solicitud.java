@@ -20,6 +20,9 @@ public class Solicitud {
     private Date fechaCreacion;
 
     public Solicitud(Long id, EstadoSolicitud estado, Date fechaCreacion) {
+        if (fechaCreacion == null) {
+            throw new IllegalArgumentException("La fecha de creacion es obligatoria.");
+        }
         this.id = id;
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
@@ -36,6 +39,14 @@ public class Solicitud {
     }
 
     public void asignarTecnico(Tecnico nuevoTecnico) {
+
+        if (nuevoTecnico == null) {
+            throw new IllegalArgumentException("El tecnico es obligatorio.");
+        }
+
+        if (estado == EstadoSolicitud.CERRADA) {
+            throw new IllegalStateException("No se puede asignar tecnico a una solicitud cerrada.");
+        }
 
         if(nuevoTecnico.getEstado() == EstadoTecnico.ACTIVO) {
             this.tecnico = nuevoTecnico;
