@@ -3,7 +3,6 @@ package com.mgcss.l2g8.domain;
 import java.util.Date;
 
 import com.mgcss.l2g8.domain.enums.EstadoSolicitud;
-import com.mgcss.l2g8.domain.enums.EstadoTecnico;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,22 +38,11 @@ public class Solicitud {
     }
 
     public void asignarTecnico(Tecnico nuevoTecnico) {
-
         if (nuevoTecnico == null) {
             throw new IllegalArgumentException("El tecnico es obligatorio.");
         }
 
-        if (estado == EstadoSolicitud.CERRADA) {
-            throw new IllegalStateException("No se puede asignar tecnico a una solicitud cerrada.");
-        }
-
-        if(nuevoTecnico.getEstado() == EstadoTecnico.ACTIVO) {
-            this.tecnico = nuevoTecnico;
-        }
-        else {
-            throw new IllegalStateException("El técnico no se puede asignar porque no está activo.");
-        }
-        
+        this.tecnico = nuevoTecnico;
     }
 
     
