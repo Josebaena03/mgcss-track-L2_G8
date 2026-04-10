@@ -66,4 +66,33 @@ public class SolicitudServicioTest {
 
         assertEquals("El técnico no se puede asignar porque no está activo.", excepcion.getMessage());
     }
+
+    @Test
+    void noDebeAsignarTecnicoSiSolicitudEsNula() {
+        Tecnico tecnico = Tecnico.builder().id(4L).nombre("Tecnico 4").estado(EstadoTecnico.ACTIVO).build();
+
+        IllegalArgumentException excepcion = assertThrows(
+                IllegalArgumentException.class,
+                () -> solicitudService.asignarTecnico(null, tecnico));
+
+        assertEquals("La solicitud es obligatoria.", excepcion.getMessage());
+    }
+
+    @Test
+    void debeCerrarSolicitudValidaDesdeServicio() {
+        Solicitud solicitud = new Solicitud(5L, EstadoSolicitud.PROCESANDO, new Date());
+
+        solicitudService.cerrarSolicitud(solicitud);
+
+        assertEquals(EstadoSolicitud.CERRADA, solicitud.getEstado());
+    }
+
+    @Test
+    void noDebeCerrarSolicitudSiEsNulaDesdeServicio() {
+        IllegalArgumentException excepcion = assertThrows(
+                IllegalArgumentException.class,
+                () -> solicitudService.cerrarSolicitud(null));
+
+        assertEquals("La solicitud es obligatoria.", excepcion.getMessage());
+    }
 }
