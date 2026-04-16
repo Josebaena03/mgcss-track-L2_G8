@@ -24,4 +24,9 @@ class L2g8ApplicationTests {
 		}
 	}
 
+	@Test
+	void debeCrearInstanciaDeAplicacion() {
+		new L2g8Application();
+	}
+
 }
