@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import com.mgcss.l2g8.domain.enums.EstadoTecnico;
 import com.mgcss.l2g8.domain.enums.EstadoSolicitud;
 
-public class SolicitudTest {
+class SolicitudTest {
 
 	@Test
-	public void cerrarSolicitudAbierta() {
+    void cerrarSolicitudAbierta() {
 		Solicitud solicitud = new Solicitud(1L, EstadoSolicitud.PROCESANDO, new Date());
 
 		solicitud.cerrarSolicitud();
@@ -23,7 +23,7 @@ public class SolicitudTest {
 	}
 
 	@Test
-	public void noDebeCerrarSolicitudSiNoEstaProcesando() {
+    void noDebeCerrarSolicitudSiNoEstaProcesando() {
 		Solicitud solicitud = new Solicitud(5L, EstadoSolicitud.ABIERTA, new Date());
 
 		IllegalStateException excepcion = assertThrows(IllegalStateException.class, solicitud::cerrarSolicitud);
@@ -32,7 +32,7 @@ public class SolicitudTest {
 	}
 
 	@Test
-	public void noDebeCrearSolicitudSinFechaCreacion() {
+    void noDebeCrearSolicitudSinFechaCreacion() {
 		IllegalArgumentException excepcion = assertThrows(
 				IllegalArgumentException.class,
 				() -> new Solicitud(2L, EstadoSolicitud.ABIERTA, null));
@@ -41,7 +41,7 @@ public class SolicitudTest {
 	}
 
 	@Test
-	public void cambiarEstadoDebePermitirPasarAProcesando() {
+    void cambiarEstadoDebePermitirPasarAProcesando() {
 		Solicitud solicitud = new Solicitud(3L, EstadoSolicitud.ABIERTA, new Date());
 
 		solicitud.cambiarEstado(EstadoSolicitud.PROCESANDO);
@@ -50,7 +50,7 @@ public class SolicitudTest {
 	}
 
 	@Test
-	public void noDebeCambiarEstadoSiSolicitudYaEstaCerrada() {
+    void noDebeCambiarEstadoSiSolicitudYaEstaCerrada() {
 		Solicitud solicitud = new Solicitud(4L, EstadoSolicitud.CERRADA, new Date());
 
 		IllegalStateException excepcion = assertThrows(
@@ -61,7 +61,7 @@ public class SolicitudTest {
 	}
 
 	@Test
-	public void noDebeAsignarTecnicoNulo() {
+    void noDebeAsignarTecnicoNulo() {
 		Solicitud solicitud = new Solicitud(6L, EstadoSolicitud.ABIERTA, new Date());
 
 		IllegalArgumentException excepcion = assertThrows(
@@ -73,7 +73,7 @@ public class SolicitudTest {
 	}
 
 	@Test
-	public void noDebeAsignarTecnicoSiSolicitudEstaCerrada() {
+	void noDebeAsignarTecnicoSiSolicitudEstaCerrada() {
 		Solicitud solicitud = new Solicitud(7L, EstadoSolicitud.CERRADA, new Date());
 		Tecnico tecnico = Tecnico.builder().id(10L).nombre("Tecnico 10").estado(EstadoTecnico.ACTIVO).build();
 

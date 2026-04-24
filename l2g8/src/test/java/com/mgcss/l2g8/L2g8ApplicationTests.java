@@ -5,6 +5,7 @@ import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.SpringApplication;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mockStatic;
 
 @SpringBootTest
@@ -26,7 +27,7 @@ class L2g8ApplicationTests {
 
 	@Test
 	void debeCrearInstanciaDeAplicacion() {
-		new L2g8Application();
+		assertNotNull(new L2g8Application());
 	}
 
 }

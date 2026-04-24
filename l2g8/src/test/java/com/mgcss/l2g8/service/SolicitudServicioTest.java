@@ -23,7 +23,7 @@ import com.mgcss.l2g8.infraestructure.SolicitudRepository;
 import com.mgcss.l2g8.infraestructure.TecnicoRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class SolicitudServicioTest {
+  class SolicitudServicioTest {
 
     @Mock
     private SolicitudRepository solicitudRepository;
