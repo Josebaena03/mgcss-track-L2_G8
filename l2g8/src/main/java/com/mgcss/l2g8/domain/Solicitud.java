@@ -20,9 +20,7 @@ public class Solicitud {
     private Date fechaCreacion;
 
     public Solicitud(Long id, EstadoSolicitud estado, Date fechaCreacion) {
-        if (fechaCreacion == null) {
-            throw new IllegalArgumentException("La fecha de creacion es obligatoria.");
-        }
+        validarFechaCreacion(fechaCreacion);
         this.id = id;
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
@@ -30,45 +28,67 @@ public class Solicitud {
 
 
     public void cerrarSolicitud() {
-        if (estado == EstadoSolicitud.PROCESANDO) {
-            estado = EstadoSolicitud.CERRADA;
-        }
-        else{
-            throw new IllegalStateException("La solicitud no se puede cerrar porque no está en estado PROCESANDO.");
-        }
+        validarQueSePuedeCerrar();
+        estado = EstadoSolicitud.CERRADA;
     }
 
     public void asignarTecnico(Tecnico nuevoTecnico) {
-        if (nuevoTecnico == null) {
-            throw new IllegalArgumentException("El tecnico es obligatorio.");
-        }
-
-        if (estado == EstadoSolicitud.CERRADA) {
-            throw new IllegalStateException("No se puede asignar tecnico a una solicitud cerrada.");
-        }
-
-        if (nuevoTecnico.getEstado() != EstadoTecnico.ACTIVO) {
-            throw new IllegalStateException("El técnico no se puede asignar porque no está activo.");
-        }
+        validarTecnico(nuevoTecnico);
+        validarQueLaSolicitudNoEsteCerrada();
+        validarTecnicoActivo(nuevoTecnico);
 
         this.tecnico = nuevoTecnico;
     }
 
     public void cambiarEstado(EstadoSolicitud nuevoEstado) {
-        if (nuevoEstado == null) {
-            throw new IllegalArgumentException("El estado es obligatorio.");
-        }
+        validarNuevoEstado(nuevoEstado);
 
         if (nuevoEstado == EstadoSolicitud.CERRADA) {
             cerrarSolicitud();
             return;
         }
 
-        if (estado == EstadoSolicitud.CERRADA) {
+        if (!estado.puedeCambiarA(nuevoEstado)) {
             throw new IllegalStateException("No se puede cambiar el estado de una solicitud cerrada.");
         }
 
         this.estado = nuevoEstado;
+    }
+
+    private void validarFechaCreacion(Date fechaCreacion) {
+        if (fechaCreacion == null) {
+            throw new IllegalArgumentException("La fecha de creacion es obligatoria.");
+        }
+    }
+
+    private void validarQueSePuedeCerrar() {
+        if (!estado.permiteCerrar()) {
+            throw new IllegalStateException("La solicitud no se puede cerrar porque no está en estado PROCESANDO.");
+        }
+    }
+
+    private void validarTecnico(Tecnico tecnico) {
+        if (tecnico == null) {
+            throw new IllegalArgumentException("El tecnico es obligatorio.");
+        }
+    }
+
+    private void validarQueLaSolicitudNoEsteCerrada() {
+        if (estado == EstadoSolicitud.CERRADA) {
+            throw new IllegalStateException("No se puede asignar tecnico a una solicitud cerrada.");
+        }
+    }
+
+    private void validarTecnicoActivo(Tecnico tecnico) {
+        if (!tecnico.getEstado().esActivo()) {
+            throw new IllegalStateException("El técnico no se puede asignar porque no está activo.");
+        }
+    }
+
+    private void validarNuevoEstado(EstadoSolicitud nuevoEstado) {
+        if (nuevoEstado == null) {
+            throw new IllegalArgumentException("El estado es obligatorio.");
+        }
     }
 
     
