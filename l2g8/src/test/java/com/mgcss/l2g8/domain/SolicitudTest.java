@@ -99,4 +99,18 @@ class SolicitudTest {
 		assertEquals(EstadoSolicitud.PROCESANDO, solicitud.getEstado());
 	}
 
+	@Test
+	void debeGuardarHistorialDeEstados() {
+		Solicitud solicitud = new Solicitud(9L, EstadoSolicitud.ABIERTA, new Date());
+		solicitud.cambiarEstado(EstadoSolicitud.PROCESANDO);
+		solicitud.cerrarSolicitud();
+		solicitud.reabrir();
+
+		assertEquals(4, solicitud.getHistorialEstados().size());
+		assertEquals(EstadoSolicitud.ABIERTA, solicitud.getHistorialEstados().get(0).getEstado());
+		assertEquals(EstadoSolicitud.PROCESANDO, solicitud.getHistorialEstados().get(1).getEstado());
+		assertEquals(EstadoSolicitud.CERRADA, solicitud.getHistorialEstados().get(2).getEstado());
+		assertEquals(EstadoSolicitud.PROCESANDO, solicitud.getHistorialEstados().get(3).getEstado());
+	}
+
 }
