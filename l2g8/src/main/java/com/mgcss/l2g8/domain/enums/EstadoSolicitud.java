@@ -10,6 +10,8 @@ public enum EstadoSolicitud {
     }
 
     public boolean puedeCambiarA(EstadoSolicitud nuevoEstado) {
-        return this != CERRADA && nuevoEstado != null;
+        if (nuevoEstado == null) return false;
+        if (this == CERRADA) return nuevoEstado == PROCESANDO;
+        return true;
     }
 }

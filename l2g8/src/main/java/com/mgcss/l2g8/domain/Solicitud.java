@@ -32,6 +32,13 @@ public class Solicitud {
         estado = EstadoSolicitud.CERRADA;
     }
 
+    public void reabrir() {
+        if (estado != EstadoSolicitud.CERRADA) {
+            throw new IllegalStateException("Solo se puede reabrir una solicitud cerrada.");
+        }
+        cambiarEstado(EstadoSolicitud.PROCESANDO);
+    }
+
     public void asignarTecnico(Tecnico nuevoTecnico) {
         validarTecnico(nuevoTecnico);
         validarQueLaSolicitudNoEsteCerrada();
