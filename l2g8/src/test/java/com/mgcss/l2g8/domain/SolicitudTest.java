@@ -55,7 +55,7 @@ class SolicitudTest {
 
 		IllegalStateException excepcion = assertThrows(
 				IllegalStateException.class,
-				() -> solicitud.cambiarEstado(EstadoSolicitud.PROCESANDO));
+				() -> solicitud.cambiarEstado(EstadoSolicitud.ABIERTA));
 
 		assertEquals("No se puede cambiar el estado de una solicitud cerrada.", excepcion.getMessage());
 	}
@@ -82,6 +82,35 @@ class SolicitudTest {
 				() -> solicitud.asignarTecnico(tecnico));
 
 		assertEquals("No se puede asignar tecnico a una solicitud cerrada.", excepcion.getMessage());
+	}
+
+	@Test
+	void debePermitirReabrirSolicitudCerrada() {
+		// Crear solicitud
+		Solicitud solicitud = new Solicitud(8L, EstadoSolicitud.ABIERTA, new Date());
+		// Cambiar a EN_PROCESO
+		solicitud.cambiarEstado(EstadoSolicitud.PROCESANDO);
+		// Cerrar
+		solicitud.cerrarSolicitud();
+		// Reabrir
+		solicitud.reabrir();
+		
+		// Verificar estado final
+		assertEquals(EstadoSolicitud.PROCESANDO, solicitud.getEstado());
+	}
+
+	@Test
+	void debeGuardarHistorialDeEstados() {
+		Solicitud solicitud = new Solicitud(9L, EstadoSolicitud.ABIERTA, new Date());
+		solicitud.cambiarEstado(EstadoSolicitud.PROCESANDO);
+		solicitud.cerrarSolicitud();
+		solicitud.reabrir();
+
+		assertEquals(4, solicitud.getHistorialEstados().size());
+		assertEquals(EstadoSolicitud.ABIERTA, solicitud.getHistorialEstados().get(0).getEstado());
+		assertEquals(EstadoSolicitud.PROCESANDO, solicitud.getHistorialEstados().get(1).getEstado());
+		assertEquals(EstadoSolicitud.CERRADA, solicitud.getHistorialEstados().get(2).getEstado());
+		assertEquals(EstadoSolicitud.PROCESANDO, solicitud.getHistorialEstados().get(3).getEstado());
 	}
 
 }

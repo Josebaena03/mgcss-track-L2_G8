@@ -1,6 +1,8 @@
 package com.mgcss.l2g8.domain;
 
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mgcss.l2g8.domain.enums.EstadoSolicitud;
 import com.mgcss.l2g8.domain.enums.EstadoTecnico;
@@ -18,18 +20,28 @@ public class Solicitud {
     private EstadoSolicitud estado;
     private Tecnico tecnico;
     private Date fechaCreacion;
+    private List<RegistroEstado> historialEstados = new ArrayList<>();
 
     public Solicitud(Long id, EstadoSolicitud estado, Date fechaCreacion) {
         validarFechaCreacion(fechaCreacion);
         this.id = id;
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
+        registrarCambioDeEstado(estado);
     }
 
 
     public void cerrarSolicitud() {
         validarQueSePuedeCerrar();
-        estado = EstadoSolicitud.CERRADA;
+        this.estado = EstadoSolicitud.CERRADA;
+        registrarCambioDeEstado(this.estado);
+    }
+
+    public void reabrir() {
+        if (estado != EstadoSolicitud.CERRADA) {
+            throw new IllegalStateException("Solo se puede reabrir una solicitud cerrada.");
+        }
+        cambiarEstado(EstadoSolicitud.PROCESANDO);
     }
 
     public void asignarTecnico(Tecnico nuevoTecnico) {
@@ -53,6 +65,11 @@ public class Solicitud {
         }
 
         this.estado = nuevoEstado;
+        registrarCambioDeEstado(this.estado);
+    }
+
+    private void registrarCambioDeEstado(EstadoSolicitud nuevoEstado) {
+        this.historialEstados.add(new RegistroEstado(nuevoEstado, new Date()));
     }
 
     private void validarFechaCreacion(Date fechaCreacion) {
