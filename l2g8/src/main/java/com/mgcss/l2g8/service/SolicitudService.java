@@ -6,6 +6,11 @@ import com.mgcss.l2g8.domain.Tecnico;
 import com.mgcss.l2g8.infraestructure.SolicitudRepository;
 import com.mgcss.l2g8.infraestructure.TecnicoRepository;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+@Service
 public class SolicitudService {
 
 	private final SolicitudRepository solicitudRepository;
@@ -24,6 +29,16 @@ public class SolicitudService {
 		return solicitudRepository.save(solicitud);
 	}
 
+	public Solicitud obtenerPorId(Long solicitudId) {
+		validarSolicitudId(solicitudId);
+
+		return buscarSolicitud(solicitudId);
+	}
+
+	public List<Solicitud> listarTodas() {
+		return solicitudRepository.findAll();
+	}
+
 	public void asignarTecnico(Long solicitudId, Long tecnicoId) {
 		validarIdentificadores(solicitudId, tecnicoId);
 
@@ -40,6 +55,14 @@ public class SolicitudService {
 		Solicitud solicitud = buscarSolicitud(solicitudId);
 
 		solicitud.cambiarEstado(nuevoEstado);
+		solicitudRepository.save(solicitud);
+	}
+
+	public void reabrirSolicitud(Long solicitudId) {
+		validarSolicitudId(solicitudId);
+
+		Solicitud solicitud = buscarSolicitud(solicitudId);
+		solicitud.reabrir();
 		solicitudRepository.save(solicitud);
 	}
 
