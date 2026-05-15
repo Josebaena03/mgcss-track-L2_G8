@@ -1,12 +1,14 @@
 package com.mgcss.l2g8.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,24 @@ import com.mgcss.l2g8.infraestructure.TecnicoRepository;
 
     @InjectMocks
     private SolicitudService solicitudService;
+
+    @Test
+    void debeCrearSolicitudSinRepositorioSolicitud() {
+        IllegalArgumentException excepcion = assertThrows(
+                IllegalArgumentException.class,
+                () -> new SolicitudService(null, tecnicoRepository));
+
+        assertEquals("El repositorio de solicitudes es obligatorio.", excepcion.getMessage());
+    }
+
+    @Test
+    void debeCrearSolicitudSinRepositorioTecnico() {
+        IllegalArgumentException excepcion = assertThrows(
+                IllegalArgumentException.class,
+                () -> new SolicitudService(solicitudRepository, null));
+
+        assertEquals("El repositorio de tecnicos es obligatorio.", excepcion.getMessage());
+    }
 
     @Test
     void debeCrearSolicitud() {
@@ -111,6 +131,37 @@ import com.mgcss.l2g8.infraestructure.TecnicoRepository;
     }
 
     @Test
+    void noDebeAsignarTecnicoSiIdTecnicoEsNulo() {
+        IllegalArgumentException excepcion = assertThrows(
+                IllegalArgumentException.class,
+                () -> solicitudService.asignarTecnico(1L, null));
+
+        assertEquals("El id del tecnico es obligatorio.", excepcion.getMessage());
+    }
+
+    @Test
+    void debeObtenerSolicitudPorId() {
+        Solicitud solicitud = new Solicitud(20L, EstadoSolicitud.ABIERTA, new Date());
+        when(solicitudRepository.findById(20L)).thenReturn(Optional.of(solicitud));
+
+        Solicitud recuperada = solicitudService.obtenerPorId(20L);
+
+        assertEquals(solicitud, recuperada);
+    }
+
+    @Test
+    void debeListarTodasLasSolicitudes() {
+        Solicitud solicitud = new Solicitud(21L, EstadoSolicitud.ABIERTA, new Date());
+        when(solicitudRepository.findAll()).thenReturn(List.of(solicitud));
+
+        List<Solicitud> solicitudes = solicitudService.listarTodas();
+
+        assertNotNull(solicitudes);
+        assertEquals(1, solicitudes.size());
+        assertEquals(solicitud, solicitudes.get(0));
+    }
+
+    @Test
     void debeCambiarEstado() {
         Solicitud solicitud = new Solicitud(5L, EstadoSolicitud.PROCESANDO, new Date());
         when(solicitudRepository.findById(5L)).thenReturn(Optional.of(solicitud));
@@ -118,6 +169,18 @@ import com.mgcss.l2g8.infraestructure.TecnicoRepository;
         solicitudService.cambiarEstado(5L, EstadoSolicitud.CERRADA);
 
         assertEquals(EstadoSolicitud.CERRADA, solicitud.getEstado());
+        verify(solicitudRepository).save(solicitud);
+    }
+
+    @Test
+    void debeReabrirSolicitud() {
+        Solicitud solicitud = new Solicitud(7L, EstadoSolicitud.PROCESANDO, new Date());
+        solicitud.cerrarSolicitud();
+        when(solicitudRepository.findById(7L)).thenReturn(Optional.of(solicitud));
+
+        solicitudService.reabrirSolicitud(7L);
+
+        assertEquals(EstadoSolicitud.PROCESANDO, solicitud.getEstado());
         verify(solicitudRepository).save(solicitud);
     }
 
