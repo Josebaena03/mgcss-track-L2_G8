@@ -50,6 +50,7 @@ public class Solicitud {
         validarTecnicoActivo(nuevoTecnico);
 
         this.tecnico = nuevoTecnico;
+        cambiarEstado(EstadoSolicitud.PROCESANDO);
     }
 
     public void cambiarEstado(EstadoSolicitud nuevoEstado) {

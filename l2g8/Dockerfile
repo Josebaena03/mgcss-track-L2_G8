@@ -1,14 +1,15 @@
 
 FROM eclipse-temurin:17-jre-alpine
 
-
 WORKDIR /app
 
+# Exponer variables de configuración por defecto
+ENV APP_PORT=8080
+ENV SPRING_PROFILES_ACTIVE=prod
 
 COPY target/*.jar app.jar
 
-# 4. Exponer el puerto 
-EXPOSE 8080
+#Exponer el puerto
+EXPOSE ${APP_PORT}
 
-# 5. Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${APP_PORT}"]
