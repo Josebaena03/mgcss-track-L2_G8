@@ -239,3 +239,4 @@ En la carpeta `l2g8/docs/` se encuentra documentación generada durante el desar
 - `refactor-notes.md` — análisis de deuda técnica y técnicas de refactorización aplicadas (Extract Method, delegación a enums, limpieza de tests JUnit 5).
 - `change-analysis.md` — análisis de impacto previo a la implementación del requisito de reapertura de solicitudes y mantenimiento del histórico de estados.
 - `release-notes.md` — justificación del versionado semántico (SemVer) y notas de cada versión publicada.
+- `memoria-tecnica.pdf` — memoria técnica de la práctica: decisiones de diseño, patrones aplicados, comparativa de métricas de calidad y análisis de deuda técnica.
