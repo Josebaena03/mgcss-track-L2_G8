@@ -56,5 +56,7 @@ jobs:
           files: l2g8/target/*.jar
           draft: false
           prerelease: false
+          generate_release_notes: true
+          body_path: l2g8/docs/release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
