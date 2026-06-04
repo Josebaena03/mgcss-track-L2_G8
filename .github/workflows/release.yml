@@ -27,6 +27,10 @@ jobs:
           distribution: 'zulu'
           cache: 'maven'
 
+      - name: Fijar versión del artefacto a partir del tag
+        working-directory: ./l2g8
+        run: mvn -B versions:set -DnewVersion=${GITHUB_REF_NAME#v} -DgenerateBackupPoms=false
+
       - name: Compilar, probar y analizar con Sonar (Quality Gate)
         working-directory: ./l2g8
         env:
